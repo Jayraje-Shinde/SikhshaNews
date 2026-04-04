@@ -2,17 +2,107 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	 <meta name="description" content="Stay updated with the latest academic news, research breakthroughs, and institutional insights from across India." />
-		 <meta property="og:title" content="Sikhsha News" />
-  <meta property="og:description" content="Latest academic news and research updates from India." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://sikhsha-news.vercel.app/" />
-    <title>sikshanews</title>
+
+    <!-- ── Primary meta ───────────────────────────────────────────────── -->
+    <title>SikshaNews — The Academic Pulse of India</title>
+    <meta name="description" content="Educational news, research papers, innovations, and academic insights from India's leading institutions." />
+    <meta name="theme-color" content="#1e3a5f" />
+
+    <!-- ── Favicon ────────────────────────────────────────────────────── -->
+    <!--
+      Place these files in /public:
+        /public/favicon.ico          (32×32)
+        /public/favicon-16x16.png
+        /public/favicon-32x32.png
+        /public/apple-touch-icon.png (180×180)
+    -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- ── Preconnect to font CDN ─────────────────────────────────────── -->
+    <!--
+      Preconnect tells the browser to open a connection to Google Fonts
+      as early as possible — before the CSS even parses the @import.
+      This saves ~100-200ms on first font load.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- ── Font load with display=swap ───────────────────────────────── -->
+    <!--
+      font-display: swap — browser shows fallback system font immediately,
+      then swaps to DM Sans once it loads. Without this, text is invisible
+      until the font downloads (FOIT — Flash of Invisible Text).
+      &display=swap appended to the Google Fonts URL achieves this.
+    -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- ── Hero image preload ─────────────────────────────────────────── -->
+    <!--
+      Preload the hero/above-the-fold image so it starts downloading
+      immediately — before the JS parses and React renders.
+      IMPORTANT: Update this path to your actual hero image once you have it.
+      Use WebP format for best compression.
+
+      If your hero image is dynamic (from API), remove this tag and instead
+      add fetchPriority="high" on the <img> tag in the HeroSection component.
+    -->
+    <!-- <link rel="preload" as="image" href="/hero-placeholder.webp" type="image/webp" /> -->
+
+    <!-- ── Preconnect to your API ─────────────────────────────────────── -->
+    <!--
+      If your Spring Boot API is on a different origin (it is — Railway),
+      preconnecting saves the DNS lookup + TCP handshake time on first API call.
+      Replace with your actual Railway URL.
+    -->
+    <link rel="preconnect" href="https://your-api.up.railway.app" />
+
+    <!-- ── Preconnect to Cloudinary ───────────────────────────────────── -->
+    <link rel="preconnect" href="https://res.cloudinary.com" />
+
+    <!-- ── Open Graph (social sharing) ──────────────────────────────────
+      These are static defaults. For article pages, override them dynamically
+      using react-helmet-async in the ArticleDetail component.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SikshaNews" />
+    <meta property="og:title" content="SikshaNews — The Academic Pulse of India" />
+    <meta property="og:description" content="Educational news, research papers, innovations, and academic insights." />
+    <meta property="og:url" content="https://sikshanews.com" />
+    <meta property="og:image" content="https://sikshanews.com/og-image.png" />
+    <!--
+      og-image.png: 1200×630px image for social sharing previews.
+      Place in /public/og-image.png
+    -->
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SikshaNews — The Academic Pulse of India" />
+    <meta name="twitter:description" content="Educational news, research papers, innovations, and academic insights." />
+    <meta name="twitter:image" content="https://sikshanews.com/og-image.png" />
+
+    <!-- ── No blocking scripts in head ───────────────────────────────── -->
+    <!--
+      Vite injects the main bundle as a module script automatically.
+      Module scripts are deferred by default — they never block rendering.
+      DO NOT add any <script> tags here without type="module" or defer.
+
+      If you add Google Analytics or AdSense later, load them like this:
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX"></script>
+      The async attribute means it won't block the HTML parser.
+    -->
   </head>
+
   <body>
     <div id="root"></div>
+
+    <!--
+      Vite injects the entry point here at build time.
+      The type="module" attribute makes it non-blocking (deferred).
+    -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

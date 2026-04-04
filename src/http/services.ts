@@ -21,50 +21,33 @@ export const postsApi = {
   getToday: () =>
     api.get<Post[]>('/posts/today').then((r) => r.data),
 
+  getMostCommented: () =>
+    api.get<Post[]>('/posts/most-commented').then((r) => r.data),
+
+  // Fires silently on article open — no await needed in component
   incrementView: (postId: string) =>
-    api.patch(`/posts/${postId}/view`),
+    api.patch(`/posts/${postId}/view`).catch(() => { /* fail silently */ }),
 };
 
-// ── Comments ──────────────────────────────────────────────
+// ── Comments — public read + anonymous post ───────────────
 export const commentsApi = {
   getByPost: (postId: string) =>
     api.get<Comment[]>(`/posts/${postId}/comments`).then((r) => r.data),
 
+  // Anonymous comment — backend assigns guest name from IP
   create: (postId: string, body: string) =>
-    api.post<{ guestName: string; message: string }>(
-      `/posts/${postId}/comments`,
-      { body }
-    ).then((r) => r.data),
-};
-
-// ── Auth ──────────────────────────────────────────────────
-export const authApi = {
-  login: (email: string, password: string) =>
-    api.post<{ token: string; user: { id: string; email: string; role: string } }>(
-      '/auth/login',
-      { email, password }
-    ).then((r) => r.data),
+    api
+      .post<{ guestName: string; message: string }>(`/posts/${postId}/comments`, { body })
+      .then((r) => r.data),
 };
 
 // ── Categories ────────────────────────────────────────────
 export const categoriesApi = {
-  getAll: () =>
-    api.get<Category[]>('/categories').then((r) => r.data),
+  getAll: () => api.get<Category[]>('/categories').then((r) => r.data),
 };
 
-// ── Newsletter ────────────────────────────────────────────
+// ── Newsletter subscription ───────────────────────────────
 export const subscribersApi = {
   subscribe: (email: string) =>
     api.post<{ message: string }>('/subscribe', { email }).then((r) => r.data),
-};
-
-// ── Image upload (via Spring Boot → Cloudinary) ───────────
-export const uploadApi = {
-  uploadImage: (file: File) => {
-    const form = new FormData();
-    form.append('file', file);
-    return api.post<{ url: string }>('/admin/upload-image', form, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }).then((r) => r.data);
-  },
 };

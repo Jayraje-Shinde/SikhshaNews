@@ -1,9 +1,15 @@
 import axios from 'axios';
 
 /**
- * Central axios instance.
- * All API calls across SikshaNews go through this — never import
- * axios directly in components or pages.
+ * Public API instance — reader site only.
+ *
+ * This is a plain getter — no JWT, no localStorage, no cookies.
+ * The reader site is fully public. No authentication needed.
+ *
+ * For the admin panel (admin.yourdomain.com), a separate axios
+ * instance will be built with httpOnly cookie support:
+ *   withCredentials: true  →  sends cookies automatically
+ *   No tokens in localStorage — more secure for admin operations
  */
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8080/api',
@@ -11,23 +17,15 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Attach JWT on every outgoing request
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+// No request interceptor needed — all public endpoints, no token
+// No 401 redirect needed — readers don't log in
 
-// Global error handling
+// Light error logging only
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.clear();
-      window.location.href = '/login';
+    if (import.meta.env.DEV) {
+      console.error('[API Error]', error.response?.status, error.config?.url);
     }
     return Promise.reject(error);
   }

@@ -1,15 +1,3 @@
-// ── Roles ─────────────────────────────────────────────────
-export type Role = 'SUPER_ADMIN' | 'ADMIN' | 'EDITOR';
-
-// ── User / Auth ───────────────────────────────────────────
-export interface User {
-  id: string;
-  email: string;
-  role: Role;
-  institutionName?: string;
-  institutionType?: 'UNIVERSITY' | 'RESEARCH_CENTER' | 'OTHER';
-}
-
 // ── Posts ─────────────────────────────────────────────────
 export type PostType = 'ARTICLE' | 'RESEARCH_PAPER' | 'IPR_DOCUMENT';
 export type PostStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
@@ -52,14 +40,22 @@ export interface Comment {
   id: string;
   postId: string;
   parentId?: string;
-  guestName: string;
+  guestName: string;       // e.g. "Guest_83920471" — assigned by backend
   content: string;
   isApproved: boolean;
-  isFlagged: boolean;
   createdAt: string;
 }
 
-// ── API Response wrappers ─────────────────────────────────
+// ── Newsletter ────────────────────────────────────────────
+export interface SubscribeRequest {
+  email: string;
+}
+
+export interface SubscribeResponse {
+  message: string;
+}
+
+// ── API wrappers ──────────────────────────────────────────
 export interface PaginatedResponse<T> {
   data: T[];
   pagination: {
@@ -75,5 +71,4 @@ export interface NavItem {
   label: string;
   path: string;
   icon?: React.ReactNode;
-  children?: NavItem[];
 }

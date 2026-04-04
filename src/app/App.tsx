@@ -1,20 +1,17 @@
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import theme from '../theme/';
-import { AuthProvider } from './AuthContext';
+import {theme} from '../theme/';
 import AppRouter from './AppRouter';
 
 /**
- * QueryClient global config.
- * staleTime: 2 min default — override per-query where needed.
- * retry: 1 — only retry failed requests once, not 3 times.
- * refetchOnWindowFocus: false — don't refetch on tab switch (news doesn't change that fast).
+ * Root app — reader site only.
+ * No AuthProvider — this is a fully public site.
  */
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 2 * 60 * 1000,
+      staleTime: 2 * 60 * 1000,    // 2 min default
       retry: 1,
       refetchOnWindowFocus: false,
     },
@@ -26,9 +23,7 @@ const App = () => (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <AuthProvider>
-          <AppRouter />
-        </AuthProvider>
+        <AppRouter />
       </BrowserRouter>
     </ThemeProvider>
   </QueryClientProvider>

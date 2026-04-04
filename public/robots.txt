@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sikhsha-news.vercel.app/sitemap.xml
+# Block admin panel if ever on same domain (safety net)
+Disallow: /admin
+
+Sitemap: https://sikshanews.com/sitemap.xml
