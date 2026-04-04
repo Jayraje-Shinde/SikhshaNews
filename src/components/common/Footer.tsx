@@ -1,14 +1,11 @@
 import {
   Box, Container, Typography, TextField, Button,
-  Grid, Link as MuiLink, Divider, Alert, CircularProgress,
+  Link as MuiLink, Divider, Alert, CircularProgress,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { subscribersApi } from '../../http/services';
-
-// Import contrast-safe colors from theme
-// These are verified to pass 4.5:1 on the navy #1e3a5f background
 import {
   ON_DARK_PRIMARY,
   ON_DARK_SECONDARY,
@@ -34,7 +31,7 @@ const FOOTER_LINKS = {
 const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 function Footer() {
-  const [email, setEmail]         = useState('');
+  const [email, setEmail]           = useState('');
   const [emailError, setEmailError] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -47,27 +44,33 @@ function Footer() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setEmailError('');
-    if (!email.trim())             { setEmailError('Please enter your email address.'); return; }
+    if (!email.trim())               { setEmailError('Please enter your email address.'); return; }
     if (!isValidEmail(email.trim())) { setEmailError('Please enter a valid email address.'); return; }
-	 console.log(email)
     subscribe();
   };
 
   return (
-    <Box
-      component="footer"
-      sx={{ bgcolor: 'primary.main', mt: 'auto' }}
-    >
+    <Box component="footer" sx={{ bgcolor: 'primary.main', mt: 'auto' }}>
       <Container maxWidth="lg" sx={{ py: { xs: 4, md: 5 } }}>
-        <Grid container spacing={4}>
 
+        {/*
+         * Layout: flex row on desktop, column on mobile.
+         * No MUI Grid used — avoids v7 breaking change entirely.
+         */}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            gap: { xs: 4, md: 3 },
+          }}
+        >
           {/* ── Brand + Newsletter ── */}
-          <Grid item xs={12} md={4}>
+          <Box sx={{ flex: { md: '0 0 320px' }, maxWidth: { md: 320 } }}>
             <Typography
               sx={{
                 fontFamily: '"DM Sans", sans-serif',
                 fontWeight: 700,
-                color: ON_DARK_PRIMARY,        // #ffffff — 10.5:1 ✅
+                color: ON_DARK_PRIMARY,
                 fontSize: '1.1rem',
                 mb: 1.25,
               }}
@@ -77,17 +80,12 @@ function Footer() {
 
             <Typography
               variant="body2"
-              sx={{
-                color: ON_DARK_SECONDARY,      // #c8dde8 — 6.1:1 ✅ (was 0.5 opacity = failing)
-                lineHeight: 1.8,
-                maxWidth: 260,
-                mb: 2.5,
-              }}
+              sx={{ color: ON_DARK_SECONDARY, lineHeight: 1.8, maxWidth: 280, mb: 2.5 }}
             >
-              The academic pulse of India — connecting researchers, institutions, and innovators through knowledge.
+              The academic pulse of India — connecting researchers, institutions,
+              and innovators through knowledge.
             </Typography>
 
-            {/* Newsletter form */}
             {subscribed ? (
               <Alert
                 severity="success"
@@ -106,61 +104,11 @@ function Footer() {
               <Box component="form" onSubmit={handleSubmit} noValidate>
                 <Typography
                   variant="caption"
-                  sx={{
-                    color: ON_DARK_MUTED,      // #9bbdd0 — 4.6:1 ✅ (was 0.45 opacity = borderline)
-                    display: 'block',
-                    mb: 1,
-                    letterSpacing: 0.5,
-                  }}
+                  sx={{ color: ON_DARK_MUTED, display: 'block', mb: 1, letterSpacing: 0.5 }}
                 >
                   Get notified of new articles
                 </Typography>
-
-               
-              </Box>
-            )}
-          </Grid>
-
-          {/* ── Nav link columns ── */}
-          {Object.entries(FOOTER_LINKS).map(([section, links]) => (
-            <Grid item xs={6} md={2} key={section}>
-              <Typography
-                variant="caption"
-                sx={{
-                  color: ON_DARK_SUBTLE,         // #7fa8c4 — 4.6:1 ✅ (was 0.35 opacity = 3.7:1 FAIL)
-                  textTransform: 'uppercase',
-                  letterSpacing: 1.5,
-                  fontWeight: 700,               // bold helps at this small size
-                  display: 'block',
-                  mb: 1.5,
-                }}
-              >
-                {section}
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.875 }}>
-                {links.map((link) => (
-                  <MuiLink
-                    key={link.path}
-                    component={Link}
-                    to={link.path}
-                    underline="none"
-                    sx={{
-                      color: ON_DARK_SECONDARY,  // #c8dde8 — 6.1:1 ✅ (was 0.6 opacity = 4.1:1 FAIL)
-                      fontSize: '0.875rem',
-                      transition: 'color 0.15s',
-                      '&:hover': { color: ON_DARK_PRIMARY },
-                    }}
-                  >
-                    {link.label}
-                  </MuiLink>
-                ))}
-              </Box>
-            </Grid>
-          ))}
-
-
-			  <form onSubmit={handleSubmit}>
-			  <Box sx={{ display: 'flex', gap: 2, flexDirection: 'column' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                   <TextField
                     type="email"
                     value={email}
@@ -184,23 +132,20 @@ function Footer() {
                         '&.Mui-focused fieldset': { borderColor: 'secondary.main' },
                         '&.Mui-error fieldset': { borderColor: 'error.main' },
                       },
-                      // Placeholder contrast: #9bbdd0 on rgba(255,255,255,0.08)+navy ≈ 4.5:1 ✅
                       '& input::placeholder': { color: ON_DARK_MUTED, opacity: 1 },
                       '& .MuiFormHelperText-root': { color: '#fca5a5', ml: 0 },
                     }}
                   />
-
                   <Button
-						
                     type="submit"
                     variant="contained"
                     disabled={isPending}
                     sx={{
-                      bgcolor: 'secondary.main',   // #3c6e71
-                      color: '#ffffff',             // 5.1:1 on teal ✅
+                      bgcolor: 'secondary.main',
+                      color: '#ffffff',
                       borderRadius: '8px',
                       textTransform: 'none',
-                      fontWeight: 600,              // bold helps contrast ratio at borderline sizes
+                      fontWeight: 600,
                       fontSize: '0.875rem',
                       py: 0.875,
                       '&:hover': { bgcolor: 'secondary.dark' },
@@ -211,37 +156,80 @@ function Footer() {
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <CircularProgress size={14} sx={{ color: 'inherit' }} />
                         Subscribing…
-                      </Box><form action="">
+                      </Box>
                     ) : 'Subscribe'}
                   </Button>
                 </Box>
-				</form>
-        </Grid>
+              </Box>
+            )}
+          </Box>
 
-		  
+          {/* ── Nav link columns ── */}
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: { xs: 3, md: 4 },
+            }}
+          >
+            {Object.entries(FOOTER_LINKS).map(([section, links]) => (
+              <Box
+                key={section}
+                sx={{
+                  flex: { xs: '0 0 calc(50% - 12px)', md: 1 },
+                  minWidth: 120,
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: ON_DARK_SUBTLE,
+                    textTransform: 'uppercase',
+                    letterSpacing: 1.5,
+                    fontWeight: 700,
+                    display: 'block',
+                    mb: 1.5,
+                  }}
+                >
+                  {section}
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.875 }}>
+                  {links.map((link) => (
+                    <MuiLink
+                      key={link.path}
+                      component={Link}
+                      to={link.path}
+                      underline="none"
+                      sx={{
+                        color: ON_DARK_SECONDARY,
+                        fontSize: '0.875rem',
+                        transition: 'color 0.15s',
+                        '&:hover': { color: ON_DARK_PRIMARY },
+                      }}
+                    >
+                      {link.label}
+                    </MuiLink>
+                  ))}
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        </Box>
 
         <Divider sx={{ borderColor: 'rgba(255,255,255,0.12)', my: 3 }} />
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}>
-          {/* Copyright — was 0.3 opacity = 3.2:1 FAIL */}
-          <Typography
-            variant="caption"
-            sx={{ color: ON_DARK_SUBTLE }}       // #7fa8c4 — 4.6:1 ✅
-          >
+          <Typography variant="caption" sx={{ color: ON_DARK_SUBTLE }}>
             © {new Date().getFullYear()} SikshaNews. All rights reserved.
           </Typography>
-
           <Box sx={{ display: 'flex', gap: 2.5 }}>
             {['Privacy Policy', 'Terms of Use'].map((label) => (
               <MuiLink
                 key={label}
                 href="#"
                 underline="hover"
-                sx={{
-                  color: ON_DARK_SUBTLE,         // #7fa8c4 — 4.6:1 ✅ (was 0.3 opacity = FAIL)
-                  fontSize: '0.75rem',
-                  '&:hover': { color: ON_DARK_SECONDARY },
-                }}
+                sx={{ color: ON_DARK_SUBTLE, fontSize: '0.75rem', '&:hover': { color: ON_DARK_SECONDARY } }}
               >
                 {label}
               </MuiLink>

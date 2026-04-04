@@ -14,8 +14,8 @@ import api from '../../http/axiosInstance.ts'
 const onclick = async () => {
   try {
     const response = await api.get('/check-health');
-    return response.data;
-  } catch (error) {
+    console.log(response.data);
+  } catch (error : any) {
     throw {
       status: error.response?.status,
       message: error.response?.data?.message || 'Health check failed',
