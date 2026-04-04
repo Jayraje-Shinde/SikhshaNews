@@ -13,7 +13,10 @@ import api from '../../http/axiosInstance.ts'
  */
 const onclick = async () => {
   try {
-    const response = await api.get('/check-health');
+    const response = await api.post('/subscriber', {
+		 "email": "example@example5.com",
+    "ipAddress": "192.168.1.1"
+	 });
     console.log(response.data);
   } catch (error : any) {
     throw {
