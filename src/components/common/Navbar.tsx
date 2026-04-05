@@ -4,6 +4,8 @@ import {
   InputBase, Menu, MenuItem, useMediaQuery, useTheme,
   Typography, Tooltip, ListItemIcon,
 } from '@mui/material';
+
+import {TranslateButton} from './GoogleTranslateButton'
 import {
   MenuOutlined, SearchOutlined, CloseOutlined,
   HomeOutlined, ScienceOutlined, LightbulbOutlined, ArticleOutlined,
@@ -15,23 +17,6 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import type { NavItem } from '../../utils/types';
 import { ON_DARK_PRIMARY, ON_DARK_SECONDARY } from '../../theme/';
-
-/**
- * Navbar contrast audit:
- *
- * Background: primary.main = #1e3a5f (navy)
- *
- * Active nav link:   #ffffff on #1e3a5f+rgba(255,255,255,0.13) → 10.5:1 ✅
- * Inactive nav link: rgba(255,255,255,0.72) on #1e3a5f → ~7.6:1 ✅ passes
- *   BUT we replace with ON_DARK_SECONDARY (#c8dde8) to be explicit + safe
- *
- * Search icon:       rgba(255,255,255,0.8) → 8.4:1 ✅ passes
- * Hamburger icon:    rgba(255,255,255,0.85) → 8.9:1 ✅ passes
- *
- * Mobile drawer background: #1e3a5f (same as appbar)
- * Drawer inactive links: rgba(255,255,255,0.72) → 7.6:1 ✅
- *   Replace with ON_DARK_SECONDARY to be explicit
- */
 
 const PRIMARY_NAV: NavItem[] = [
   { label: 'Home',       path: '/',           icon: <HomeOutlined fontSize="small" /> },
@@ -227,7 +212,7 @@ const Navbar = ({ onFilterToggle, filterOpen = false }: NavbarProps) => {
           )}
 
           <Box sx={{ flex: 1, display: { md: 'none' } }} />
-
+			<TranslateButton/>
           {onFilterToggle && (
             <Tooltip title={filterOpen ? 'Close filters' : 'Filters & categories'}>
               <IconButton
