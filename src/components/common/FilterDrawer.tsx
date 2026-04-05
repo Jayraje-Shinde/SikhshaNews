@@ -1,13 +1,10 @@
 import {
   Drawer, Box, Typography, IconButton, Chip,
   List, ListItem, ListItemButton, ListItemText,
-  Skeleton, Divider, useMediaQuery, useTheme,
+   Divider, useMediaQuery, useTheme,
 } from '@mui/material';
 import { CloseOutlined } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { categoriesApi } from '../../http/services';
-import type { Category } from '../../utils/types';
 
 /**
  * FilterDrawer — collapsible right-side panel for categories & filters.
@@ -41,12 +38,6 @@ const FilterDrawer = ({ open, onClose, selectedCategory, onCategorySelect }: Fil
   const muiTheme = useTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down('sm'));
 
-  const { data: categories, isLoading } = useQuery<Category[]>({
-    queryKey: ['categories'],
-    queryFn: categoriesApi.getAll,
-    staleTime: 60 * 60 * 1000, // 60 min — rarely changes
-    enabled: open,              // Only fetch when drawer is opened
-  });
 
   return (
     <Drawer
@@ -122,33 +113,7 @@ const FilterDrawer = ({ open, onClose, selectedCategory, onCategorySelect }: Fil
               }}
             />
 
-            {isLoading
-              ? Array.from({ length: 10 }).map((_, i) => (
-                  <Skeleton
-                    key={i}
-                    variant="rounded"
-                    width={60 + (i % 3) * 20}
-                    height={28}
-                    sx={{ borderRadius: 4 }}
-                  />
-                ))
-              : categories?.map((cat) => (
-                  <Chip
-                    key={cat.id}
-                    label={cat.name}
-                    size="small"
-                    onClick={() => onCategorySelect?.(cat.name)}
-                    sx={{
-                      fontSize: '0.75rem',
-                      bgcolor: selectedCategory === cat.name ? 'secondary.main' : 'background.default',
-                      color: selectedCategory === cat.name ? '#fff' : 'text.secondary',
-                      border: '1px solid',
-                      borderColor: selectedCategory === cat.name ? 'secondary.main' : 'divider',
-                      fontWeight: selectedCategory === cat.name ? 600 : 400,
-                      '&:hover': { bgcolor: 'secondary.main', color: '#fff', borderColor: 'secondary.main' },
-                    }}
-                  />
-                ))}
+       
           </Box>
         </Box>
 
